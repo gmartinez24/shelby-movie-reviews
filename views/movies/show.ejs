@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= movie.title %></title>
-    </head>
-    <body>
-        <h1><%= movie.title %></h1>
-        <h2><%= movie.year%></h2>
-        <h2><%= movie.runtime%></h2>
-        <a href="/movies/<%=movie._id %>/edit">Edit</a>
-        <p>
-            <form action="/movies/<%=movie._id %>/?_method=DELETE" method="POST">
-                <button>Delete</button>
-            </form>
-        </p>
+<% layout("layouts/boilerplate") %>
+<h1><%= movie.title %></h1>
+<p><%= movie.year%></p>
+<p><%= movie.runtime%></p>
+<p><a href="/movies/<%=movie._id %>/edit">Edit</a></p>
 
-        <footer>
-            <a href="/movies">All Movies</a>
-        </footer>
-    </body>
-</html>
+<form action="/movies/<%=movie._id %>/?_method=DELETE" method="POST">
+    <button>Delete</button>
+</form>
+
+<footer>
+    <p><a href="/movies">All Movies</a></p>
+</footer>
