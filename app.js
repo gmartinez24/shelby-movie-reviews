@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const methodOverride = require("method-override");
 const Movie = require("./models/movie");
 
 mongoose.connect("mongodb://127.0.0.1:27017/shelby-reviews");
@@ -17,6 +18,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
     res.render("home");
@@ -40,6 +42,17 @@ app.post("/movies", async (req, res) => {
 app.get("/movies/:id", async (req, res) => {
     const movie = await Movie.findById(req.params.id);
     res.render("movies/show", { movie });
+});
+
+app.get("/movies/:id/edit", async (req, res) => {
+    const movie = await Movie.findById(req.params.id);
+    res.render("movies/edit", { movie });
+});
+
+app.put("/movies/:id", async (req, res) => {
+    const { id } = req.params;
+    await Movie.findByIdAndUpdate(id, { ...req.body.movie });
+    res.redirect(`/movies/${id}`);
 });
 
 app.listen(3000, () => {
