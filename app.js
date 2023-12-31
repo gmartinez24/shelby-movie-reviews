@@ -16,6 +16,8 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
     res.render("home");
 });
@@ -25,10 +27,21 @@ app.get("/movies", async (req, res) => {
     res.render("movies/index", { movies });
 });
 
+app.get("/movies/new", async (req, res) => {
+    res.render("movies/new");
+});
+
+app.post("/movies", async (req, res) => {
+    const newMovie = new Movie(req.body.movie);
+    await newMovie.save();
+    res.redirect(`/movies/${newMovie._id}`);
+});
+
 app.get("/movies/:id", async (req, res) => {
     const movie = await Movie.findById(req.params.id);
     res.render("movies/show", { movie });
 });
+
 app.listen(3000, () => {
     console.log("Serving on port 3000");
 });
