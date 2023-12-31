@@ -55,6 +55,12 @@ app.put("/movies/:id", async (req, res) => {
     res.redirect(`/movies/${id}`);
 });
 
+app.delete("/movies/:id", async (req, res) => {
+    const { id } = req.params;
+    const movie = await Movie.findByIdAndDelete(id);
+    res.redirect("/movies");
+});
+
 app.listen(3000, () => {
     console.log("Serving on port 3000");
 });
