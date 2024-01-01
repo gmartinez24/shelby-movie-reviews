@@ -3,8 +3,16 @@ const Schema = mongoose.Schema;
 
 const MovieSchema = new Schema({
     title: String,
-    year: Number,
+    genres: [
+        {
+            id: Number,
+            name: String,
+        },
+    ],
+    poster_path: String,
+    release_date: String,
     runtime: Number,
+    tmdb_id: Number,
 });
 
 module.exports = mongoose.model("Movie", MovieSchema);

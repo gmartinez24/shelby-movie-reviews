@@ -1,11 +1,16 @@
 <% layout("layouts/boilerplate") %>
-<h1>All Movies</h1>
-<div>
-    <a href="/movies/new">Add Movie</a>
-</div>
 
-<ul>
-    <% for (let movie of movies) {%>
-    <a href="/movies/<%=movie._id %>"> <li><%=movie.title %></li></a>
-    <% } %>
-</ul>
+<h1>Search For Movies</h1>
+<form id="searchForm" action="/movies">
+    <div>
+        <input type="text" name="movie" id="Movie Title" />
+        <button>Search</button>
+    </div>
+    <div>
+        <% if(searchedMovies !== "undefined"){ %> <%for (let movie of searchedMovies) { if (movie.poster_path) {%>
+
+        <a href="/movies/<%=movie.id%>"> <img style="width: 15%"class="img-fluid" src=<%=`https://image.tmdb.org/t/p/w500${movie.poster_path}`%>></a>
+
+        <% } } } %>
+    </div>
+</form>

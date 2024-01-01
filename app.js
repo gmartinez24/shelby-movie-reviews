@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const Movie = require("./models/movie");
+const axios = require("axios");
 
 mongoose.connect("mongodb://127.0.0.1:27017/shelby-reviews");
 
@@ -27,8 +28,18 @@ app.get("/", (req, res) => {
 });
 
 app.get("/movies", async (req, res) => {
-    const movies = await Movie.find({});
-    res.render("movies/index", { movies });
+    //const movies = await Movie.find({});
+    const title = req.query.movie;
+    if (title) {
+        const queryResult = await axios.get(
+            `https://api.themoviedb.org/3/search/movie?include_adult=false&query=${title}&api_key=48f9a2707c2061383ef9c9e434c792b1`
+        );
+        const searchedMovies = queryResult.data.results;
+        res.render("movies/index", { searchedMovies });
+    } else {
+        const searchedMovies = "undefined";
+        res.render("movies/index", { searchedMovies });
+    }
 });
 
 app.get("/movies/new", async (req, res) => {
@@ -42,8 +53,29 @@ app.post("/movies", async (req, res) => {
 });
 
 app.get("/movies/:id", async (req, res) => {
-    const movie = await Movie.findById(req.params.id);
-    res.render("movies/show", { movie });
+    try {
+        const queryMovie = await axios.get(`https://api.themoviedb.org/3/movie/${req.params.id}?api_key=48f9a2707c2061383ef9c9e434c792b1`);
+        const newMovieData = queryMovie.data;
+        const movie = await Movie.findOneAndUpdate(
+            { tmdb_id: req.params.id },
+            {
+                tmdb_id: newMovieData.id,
+                title: newMovieData.title,
+                genres: newMovieData.genres,
+                poster_path: newMovieData.poster_path,
+                release_date: newMovieData.release_date,
+                runtime: newMovieData.runtime,
+            },
+            {
+                new: true,
+                upsert: true,
+            }
+        );
+
+        res.render("movies/show", { movie });
+    } catch {
+        console.log("ERROR");
+    }
 });
 
 app.get("/movies/:id/edit", async (req, res) => {

@@ -1,6 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <h1><%= movie.title %></h1>
-<p><%= movie.year%></p>
+<img style="width:30%" src=<%=`https://image.tmdb.org/t/p/w500${movie.poster_path}`%>>
 <p><%= movie.runtime%></p>
 <p><a href="/movies/<%=movie._id %>/edit">Edit</a></p>
 
