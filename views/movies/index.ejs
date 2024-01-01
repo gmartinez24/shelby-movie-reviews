@@ -1,10 +1,9 @@
 <% layout("layouts/boilerplate") %>
-
 <h1>Search For Movies</h1>
 <form id="searchForm" action="/movies">
-    <div>
+    <div class="mb-3">
         <input type="text" name="movie" id="Movie Title" />
-        <button>Search</button>
+        <button class="btn btn-primary">Search</button>
     </div>
     <div>
         <% if(searchedMovies !== "undefined"){ %> <%for (let movie of searchedMovies) { if (movie.poster_path) {%>

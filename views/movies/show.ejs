@@ -1,13 +1,26 @@
 <% layout("layouts/boilerplate") %>
-<h1><%= movie.title %></h1>
-<img style="width:30%" src=<%=`https://image.tmdb.org/t/p/w500${movie.poster_path}`%>>
-<p><%= movie.runtime%></p>
-<p><a href="/movies/<%=movie._id %>/edit">Edit</a></p>
 
-<form action="/movies/<%=movie._id %>/?_method=DELETE" method="POST">
-    <button>Delete</button>
-</form>
-
-<footer>
-    <p><a href="/movies">All Movies</a></p>
-</footer>
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card mb-3 p-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src=<%=`https://image.tmdb.org/t/p/w500${movie.poster_path}`%> class="card-img-top" alt=<%=`poster for ${movie.title}`%>>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= movie.title %></h5>
+                        <p class="card-text"><%=movie.description %></p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-muted"><%=movie.runtime %> minutes</li>
+                        <li class="list-group-item text-muted"><%=movie.release_date %></li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="/movies?movie=<%=movie.title%>" class="btn btn-info">Movie Search</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

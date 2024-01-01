@@ -13,6 +13,7 @@ const MovieSchema = new Schema({
     release_date: String,
     runtime: Number,
     tmdb_id: Number,
+    description: String,
 });
 
 module.exports = mongoose.model("Movie", MovieSchema);

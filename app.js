@@ -65,6 +65,7 @@ app.get("/movies/:id", async (req, res) => {
                 poster_path: newMovieData.poster_path,
                 release_date: newMovieData.release_date,
                 runtime: newMovieData.runtime,
+                description: newMovieData.overview,
             },
             {
                 new: true,
@@ -73,8 +74,8 @@ app.get("/movies/:id", async (req, res) => {
         );
 
         res.render("movies/show", { movie });
-    } catch {
-        console.log("ERROR");
+    } catch (err) {
+        console.log("ERROR", err);
     }
 });
 
