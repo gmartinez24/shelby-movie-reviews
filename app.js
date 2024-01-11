@@ -5,9 +5,16 @@ const methodOverride = require("method-override");
 const ExpressError = require("./utils/ExpressError");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
-const movies = require("./routes/movies");
-const movieReviews = require("./routes/movieReviews");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const Audience = require("./models/audience");
+const Reviewer = require("./models/reviewer");
+
+const reviewerRoutes = require("./routes/reviewer");
+const audienceRoutes = require("./routes/audience");
+const movieRoutes = require("./routes/movies");
+const movieReviewRoutes = require("./routes/movieReviews");
 
 mongoose.connect("mongodb://127.0.0.1:27017/shelby-reviews");
 
@@ -41,15 +48,46 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use("audienceLocal", new LocalStrategy(Audience.authenticate()));
+passport.use("reviewerLocal", new LocalStrategy(Reviewer.authenticate()));
+
+// passport.serializeUser(Reviewer.serializeUser());
+// passport.deserializeUser(Reviewer.deserializeUser());
+// passport.serializeUser(Audience.serializeUser());
+// passport.deserializeUser(Audience.deserializeUser());
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+    if (user != null) done(null, user);
+});
+
 app.use((req, res, next) => {
+    res.locals.activePath = req.path;
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();
 });
 
 //routes
-app.use("/movies", movies);
-app.use("/movies/:id/reviews", movieReviews);
+app.use("/reviewer", reviewerRoutes);
+app.use("/audience", audienceRoutes);
+app.use("/movies", movieRoutes);
+app.use("/movies/:id/reviews", movieReviewRoutes);
+
+app.get("/logout", (req, res) => {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.flash("success", "Goodbye!");
+        res.redirect("/movies");
+    });
+});
 
 app.get("/", (req, res) => {
     res.render("home");

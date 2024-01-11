@@ -13,14 +13,21 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/movies">Movies</a>
-                </li>
-            </ul>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="/">Home</a>
+
+                <a class="nav-link" href="/movies">Movies</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <% if(!currentUser && activePath !== "/audience/login" ){ %>
+                <a class="nav-link" href="/audience/login">Login</a>
+                <a href="/audience/register" class="nav-link">Register</a>
+                <% } else if (currentUser){ %>
+                <a href="/logout" class="nav-link">Logout</a>
+                <% } %> <% if (activePath === "/audience/login"){%>
+                <a href="/reviewer/login" class="nav-link">Reviewer Login</a>
+                <% } %>
+            </div>
         </div>
     </div>
 </nav>

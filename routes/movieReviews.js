@@ -6,6 +6,7 @@ const joi = require("joi");
 const MovieReview = require("../models/movieReview");
 const ExpressError = require("../utils/ExpressError");
 const axios = require("axios");
+const { ensureReviewer, isReviewAuthor } = require("../middleware");
 
 const validateMovieReviews = (req, res, next) => {
     const { error } = movieReviewSchema.validate(req.body);
@@ -19,10 +20,17 @@ const validateMovieReviews = (req, res, next) => {
 
 router.post(
     "/",
+    ensureReviewer,
     validateMovieReviews,
     catchAsync(async (req, res) => {
         req.flash("success", "Successfully posted a review");
-        const newReview = new MovieReview({ rating: req.body.movieReview.rating, body: req.body.movieReview.body, movie_id: req.params.id });
+        const newReview = new MovieReview({
+            rating: req.body.movieReview.rating,
+            body: req.body.movieReview.body,
+            movie_id: req.params.id,
+            author: req.user._id,
+        });
+
         await newReview.save();
         res.redirect(`/movies/${req.params.id}`);
     })
@@ -30,6 +38,8 @@ router.post(
 
 router.delete(
     "/:reviewid",
+    ensureReviewer,
+    isReviewAuthor,
     catchAsync(async (req, res) => {
         req.flash("success", "Successfully deleted a review");
         await MovieReview.findByIdAndDelete(req.params.reviewid);
