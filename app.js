@@ -14,7 +14,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
-const dbUrl = process.env.DB_URL;
+const MongoDBStore = require("connect-mongo")(session); // using version 3.2.0
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/shelby-reviews";
 const Audience = require("./models/audience");
 const Reviewer = require("./models/reviewer");
 
@@ -23,7 +24,6 @@ const audienceRoutes = require("./routes/audience");
 const movieRoutes = require("./routes/movies");
 const movieReviewRoutes = require("./routes/movieReviews");
 
-// ("mongodb://127.0.0.1:27017/shelby-reviews");
 mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
@@ -43,9 +43,22 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({ replaceWith: "_" }));
 
+const secret = process.env.SECRET || "ThisShouldBeABetterSecret";
+
+const store = new MongoDBStore({
+    url: dbUrl,
+    secret,
+    touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+    console.log("session store error", e);
+});
+
 const sessionConfig = {
+    store,
     name: "session",
-    secret: "ThisShouldBeABetterSecret",
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
