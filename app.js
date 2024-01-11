@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -10,6 +14,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
+const dbUrl = process.env.DB_URL;
 const Audience = require("./models/audience");
 const Reviewer = require("./models/reviewer");
 
@@ -18,7 +23,8 @@ const audienceRoutes = require("./routes/audience");
 const movieRoutes = require("./routes/movies");
 const movieReviewRoutes = require("./routes/movieReviews");
 
-mongoose.connect("mongodb://127.0.0.1:27017/shelby-reviews");
+// ("mongodb://127.0.0.1:27017/shelby-reviews");
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
