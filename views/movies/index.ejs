@@ -8,7 +8,9 @@
     <div class="mb-3">
         <% if(searchedMovies !== "undefined"){ %> <%for (let movie of searchedMovies) { if (movie.poster_path) {%>
 
-        <a href="/movies/<%=movie.id%>"> <img style="width: 15%"class="img-fluid" src=<%=`https://image.tmdb.org/t/p/w500${movie.poster_path}`%>></a>
+        <a href="/movies/<%=movie.id%>">
+            <img style="width: 15%" class="img-fluid mb-2 mx-1 " src=<%=`https://image.tmdb.org/t/p/w500${movie.poster_path}`%>></a
+        >
 
         <% } } } %>
     </div>

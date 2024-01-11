@@ -4,7 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const MovieReview = require("../models/movieReview");
 const axios = require("axios");
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn, storeReturnTo } = require("../middleware");
 
 router.get(
     "/",

@@ -30,7 +30,6 @@ router.post(
 );
 
 router.get("/login", (req, res) => {
-    console.log(res.locals.activePath);
     res.render("users/audienceLogin");
 });
 
