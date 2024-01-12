@@ -40,6 +40,7 @@ router.post(
     passport.authenticate("reviewerLocal", { failureFlash: true, failureRedirect: "/reviewer/login" }),
     (req, res) => {
         req.flash("success", "Welcome Back!");
+        console.log("logged in");
         const redirectUrl = res.locals.returnTo || "/movies";
         res.redirect(redirectUrl);
     }
