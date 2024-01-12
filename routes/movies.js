@@ -17,7 +17,7 @@ router.get(
             );
         } else {
             queryResult = await axios.get(
-                `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=48f9a2707c2061383ef9c9e434c792b1`
+                `https://api.themoviedb.org/3/movie/popular?include_adult=false&language=en-US&page=1&api_key=48f9a2707c2061383ef9c9e434c792b1`
             );
         }
         const searchedMovies = queryResult.data.results;
