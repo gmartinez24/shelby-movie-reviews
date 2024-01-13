@@ -18,7 +18,7 @@ const MongoDBStore = require("connect-mongo")(session); // using version 3.2.0
 const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/shelby-reviews";
 const Audience = require("./models/audience");
 const Reviewer = require("./models/reviewer");
-
+const users = require("./controllers/users");
 const reviewerRoutes = require("./routes/reviewer");
 const audienceRoutes = require("./routes/audience");
 const movieRoutes = require("./routes/movies");
@@ -138,15 +138,7 @@ app.use("/audience", audienceRoutes);
 app.use("/movies", movieRoutes);
 app.use("/movies/:id/reviews", movieReviewRoutes);
 
-app.get("/logout", (req, res) => {
-    req.logout(function (err) {
-        if (err) {
-            return next(err);
-        }
-        req.flash("success", "Goodbye!");
-        res.redirect("/movies");
-    });
-});
+app.get("/logout", users.logout);
 
 app.get("/", (req, res) => {
     res.render("home");
